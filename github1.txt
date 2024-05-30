@@ -1,0 +1,59 @@
+git config --global user.name "omar"
+git config --global user.email "omar@gmail.com"
+git config --global user.password "kkkk"
+
+///                  how to uspload a folder in github
+
+
+on github setup new repo without initialize readme.md file
+go to the folder in terminal which you want to upload
+echo "# somecode" >> README.md
+git init
+git add README.md
+git add .
+git commit -m "first commit"
+git remote add origin https://github.com/omarhossain/somecode.git
+git push -u origin master 
+[now git hub will ask to enter email and password]
+
+
+//          2
+
+(go to folder u want to push)
+git init [initialize folder with git to work with git]
+git status  [shows which folder or files are not commited or added]
+git add . [all files in folder selected]
+git commit -m "message" [to save the files go to staging area not uploaded yet]
+//first create a repo in github then copy line below from there and line afte that aso paste that
+git remote add origin https://github.com/omarhossain/somecode.git 
+git push -u origin master [to push the files to github]
+//all files would be uploaded
+
+///    3
+
+git reset [make all file untracked u can check it by git status]
+.gitignore [to remove files that we dont want to upload or untrack *.html  all html files will be ignored]
+git log [shows the hash code i.e id of recent commit]
+git clone "url"
+git push origin master
+git pull origin master
+
+
+////      4  branching
+
+git branch [shows all branches]
+git branch chance1 [creates branch chance1]
+git checkout chance1 [switch to chance1 branch]
+
+
+git add .
+git commit -m "changes pushing to branch chance1"
+git pull origin chance1
+git push origin chance1 [push to chance1 branch]
+
+//to merge branch chance 1 in master
+git checkout master [switch to master branch]
+git pull origin master
+git branch --merged
+git merge chance1 [merge chance1 branch in master branch]
+git push origin master 

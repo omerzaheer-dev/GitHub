@@ -1,0 +1,107 @@
+extensions to be installed 
+1-git blame
+2-git autoconfig
+3-github theme
+
+1-[global configurations for git for system]
+git config --global user.name ""
+git config --global user.email ""
+git config --global user.password ""
+git config --global core.editor "code --wait" (for vsCode different for every code editor)
+git config --global core.autocrlf (for windows)
+git config --global -e (to edit values we entered above)
+
+2-[stages]
+U - untracked
+A - added or staged
+C - commited
+M - modified
+D - deleted
+R - renamed
+
+3-[make git available in project]
+git init  ||  (go to github icon on vscode and click initialize this project for git hub)
+git add filename || (go to github icon on vscode and click + icon on file that file will be go for staged changes added)
+git commit -m "message" || (go to github icon on vscode and click commit to stage)
+git log --oneline [this will tell you all check points comits with ids and commits names commit histries]
+git reset --hard  HEAD~1 (it will go to previous commit 1 step back)
+
+4-[extra things]
+a) git status -s
+?? filename (untracked files git is not awared of this file)
+A  filename (added file)
+AM filename (added but modified not commited)
+
+5-[branching in git]
+git branch (to see all branches)
+git branch nameOfBranch (to create branch)
+git switch branchname (to switch to branch)
+
+a) for merging two branches we have to switch in main branch
+git switch main/master 
+git merge other9branchname 
+b) if in case of conflicts main branch has different code in same line and other copy branch have different conflick happen
+   we can keep master branch code or other copy branch code or both changes while merging after doing it add files to be 
+   stagged and then commit
+1)accept current change means master branch 2)accept incomming change means other copy branch code/changes 3)accept both changes
+
+git branch -d branchname [this commands delete the branch]
+
+
+6-[staching]
+Q # what is staching?
+Answer : when u are working on a branch and you have written some code when you want to switch to another branch and you havent 
+         commited it says changes are not sved they will be deleted we want we can delete changes or we can draft changes that
+         changes not even deleted and not even added when we again come to same branch we can apply same changes
+
+
+git switch -C branchname (this will first create and then switch to the branch 2 in 1)
+
+first change code in branch and without commiting switch the branch it will display error
+git stash (this will save the changes in stash)
+when you come back to that branch again use commands
+git stash apply (this will apply changes)
+
+8-[staching]
+git switch -C feature/footer
+(apply the changes and not to commit then switch to main it will show error)
+git switch main
+git stash
+(complete your work in main branch and commit and switch branch)
+git switch feature/footer
+git stash apply (now the changes will appear)
+git stash clear (not apply change use it if u not want code use in place of apply)
+
+
+9-[how to add collaborators]
+first create repo private then add all files on that repo make sure to use git add . in place of readme.md
+to add colaborators settings -> collaborators -> add people = add user name of collaborators
+the person we added will recieve email accept it to be a collaborator
+
+a) - (for second person for collaborator )
+(clone that repo )
+git clone ""
+(create a branch) 
+git switch -C feature/kiabatha
+(write code in your branch)
+(when code finished work add all files and commit it)
+git add .
+git commit -m "message"
+(now push branch to git hub)
+git push origin feature/kiabatha
+
+b) - (for first person for who is owner of project whose account is )
+(make sure u are i main branch)
+git fetch
+git switch feature/kiabatha
+git switch main
+git merge feature/kiabatha
+(now this is only in owner laptop upload this code on github)
+git push origin main
+
+
+ c) - (for second person for collaborator to check )
+ git switch main 
+ git fetch 
+ git pull
+ 
