@@ -1,0 +1,28 @@
+.model small
+.stack 100h
+
+.data
+    message db "Hello, World!", "$"
+
+.code
+main:
+    mov ax, @data
+    mov ds, ax
+    
+print_loop:
+    mov ah, 09h         ; DOS function to print string
+    lea dx, message     ; Load the offset of the string into DX
+    int 21h             ; Call interrupt to print string
+    
+    ; Check if a key has been pressed
+    mov ah, 01h         ; Check for keyboard input
+    int 16h             ; Call interrupt to check keyboard status
+    jnz exit_loop       ; If ZF is clear, a key has been pressed
+    
+    jmp print_loop      ; Otherwise, continue printing
+    
+exit_loop:
+    mov ah, 4Ch         ; DOS function to exit program
+    int 21h             ; Call interrupt to exit program
+    
+end main
