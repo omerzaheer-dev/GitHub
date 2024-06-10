@@ -1,0 +1,45 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    number DW 1234          ; Define a 16-bit number to print
+
+.CODE
+MAIN PROC
+    MOV AX, @DATA          ; Load the data segment address into AX
+    MOV DS, AX             ; Set the data segment register to point to the data segment
+
+    MOV AX, number         ; Move the number to AX register
+    CALL PRINT_NUMBER      ; Call the subroutine to print the number
+
+    MOV AH, 4CH            ; DOS function to terminate the program
+    INT 21H                ; Call DOS
+
+MAIN ENDP
+
+; Subroutine to print a 16-bit number
+PRINT_NUMBER PROC
+    MOV BX, 10             ; BX = 10 for decimal conversion
+
+    MOV CX, 0              ; Initialize counter for number of digits
+    MOV DX, 0              ; Initialize DX register to store remainder
+
+PRINT_LOOP:
+    MOV DX, 0              ; Clear DX
+    DIV BX                 ; Divide AX by 10, quotient in AX, remainder in DX
+    PUSH DX                ; Push remainder onto stack
+    INC CX                 ; Increment digit counter
+    TEST AX, AX            ; Check if quotient is zero
+    JNZ PRINT_LOOP         ; If quotient is not zero, continue loop
+
+PRINT_LOOP2:
+    POP DX                 ; Pop remainder from stack
+    ADD DL, '0'            ; Convert remainder to ASCII
+    MOV AH, 2              ; DOS function to print character
+    INT 21H                ; Print the character
+    LOOP PRINT_LOOP2       ; Loop until all digits are printed
+
+    RET                    ; Return from subroutine
+PRINT_NUMBER ENDP
+
+END MAIN
