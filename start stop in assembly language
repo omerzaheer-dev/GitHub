@@ -1,0 +1,38 @@
+.model small
+.stack 100h
+
+.data
+    message db "Hello, World!", "$"
+.code
+main:
+    mov ax, @data
+    mov ds, ax
+    
+    ; Wait for the 'S' key press to start printing
+wait_start:
+    mov ah, 01h         ; Check for keyboard input
+    int 16h             ; Call interrupt to check keyboard status
+    jz wait_start       ; If ZF is set, no key has been pressed, continue waiting
+    
+    ; If 'S' key has been pressed, set the started flag
+    mov ah, 00h         ; Read the key without waiting
+    int 16h             ; Call interrupt to read the key
+    cmp al, 'S'         ; Compare the key with 'S'
+    jne wait_start      ; If not 'S', wait for another key press
+    
+    
+print_loop:
+
+    
+    mov ah, 09h         ; DOS function to print string
+    lea dx, message     ; Load the offset of the string into DX
+    int 21h             ; Call interrupt to print string
+    mov ah, 01h         ; Check for keyboard input
+    int 16h             ; Call interrupt to check keyboard status
+    jz print_loop
+    mov ah, 00h         ; Read the key without waiting
+    int 16h             ; Call interrupt to read the key
+    cmp al, 'P'         ; Compare the key with 'S'
+    je wait_start
+    
+end main
