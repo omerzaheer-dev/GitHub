@@ -1,0 +1,52 @@
+.model small
+.stack 100h
+
+.data
+array_size  equ 5       ; Define the size of the array
+array       dw 5 dup(?)  ; Define an empty array with 5 elements
+
+.code
+main:
+    mov ax, @data       ; Load the data segment address into AX
+    mov ds, ax          ; Set DS to point to the data segment
+
+    ; Store values in the array
+    mov ax, 1           ; First value
+    mov [array], ax     ; Store in the first element of the array
+
+    mov ax, 2           ; Second value
+    mov [array+2], ax   ; Store in the second element of the array
+
+    mov ax, 3           ; Third value
+    mov [array+4], ax   ; Store in the third element of the array
+
+    mov ax, 4           ; Fourth value
+    mov [array+6], ax   ; Store in the fourth element of the array
+
+    mov ax, 5           ; Fifth value
+    mov [array+8], ax   ; Store in the fifth element of the array
+
+    mov cx, array_size  ; Set CX to the size of the array
+    mov si, 0           ; Set SI to point to the beginning of the array
+
+print_loop:
+    mov ax, [array + si]    ; Load the current element of the array into AX
+    call print_num          ; Print the number in AX
+    add si, 2               ; Move to the next element (since each element is 2 bytes)
+    loop print_loop         ; Repeat until all elements are printed
+
+    mov ax, 4c00h       ; Exit program
+    int 21h
+
+print_num:
+    ; Print the number in AX
+    push ax              ; Save AX
+    mov ah, 2            ; Function to print character
+    add ax, 30h          ; Convert number to ASCII
+    mov dl, al           ; Load DL with the ASCII character
+    mov ah, 2            ; Function to print character
+    int 21h              ; Print the character
+    pop ax               ; Restore AX
+    ret
+
+end main
