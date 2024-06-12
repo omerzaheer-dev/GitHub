@@ -1,0 +1,125 @@
+.MODEL SMALL
+.DATA
+    resetime db '0:00 $'
+    sec dw 1
+    min dw 0
+    colun db ':$'
+.CODE
+START: 
+MOV AX,@DATA
+MOV DS,AX
+
+
+
+reset:
+    CALL CLEAR
+    mov dx,offset resetime
+    mov ah,09h
+    int 21h
+    mov ax,0  
+    mov min,ax
+    add ax,1
+    mov sec,ax
+    
+
+wait_start:
+    mov ah, 01h         ; Check for keyboard input
+    int 16h             ; Call interrupt to check keyboard status
+    jz wait_start       ; If ZF is set, no key has been pressed, continue waiting
+    
+                        ; If 'S' key has been pressed, set the started flag
+    mov ah, 00h         ; Read the key without waiting
+    int 16h             ; Call interrupt to read the key
+    cmp al, 'S'         ; Compare the key with 'S'
+    jne wait_start      ; If not 'S', wait for another key press
+    cmp al, 'R'
+    je reset
+    
+    
+;print seconds
+Seconds: 
+    
+    CALL CLEAR
+    ;minutes
+    mov ax,min
+    CALL PRINT_NUMBER
+    mov dl,offset colun
+    mov ah,09h   
+    int 21h
+
+
+    MOV AX, sec    
+    CALL PRINT_NUMBER
+    mov ax,sec                   
+    add ax,2
+    mov sec,ax
+    cmp ax,61
+    je SIXTY
+    
+    
+    mov ah, 01h         ; Check for keyboard input
+    int 16h             ; Call interrupt to check keyboard status
+    jz Seconds
+    mov ah, 00h         ; Read the key without waiting
+    int 16h             ; Call interrupt to read the key
+    cmp al, 'P'         ; Compare the key with 'S'
+    je wait_start
+    cmp al, 'R'
+    je reset
+
+PRINT_NUMBER PROC
+    MOV BX, 10             ; BX = 10 for decimal conversion
+
+    MOV CX, 0              ; Initialize counter for number of digits
+    MOV DX, 0              ; Initialize DX register to store remainder
+
+PRINT_LOOP:
+    MOV DX, 0              ; Clear DX
+    DIV BX                 ; Divide AX by 10, quotient in AX, remainder in DX
+    PUSH DX                ; Push remainder onto stack
+    INC CX                 ; Increment digit counter
+    TEST AX, AX            ; Check if quotient is zero
+    JNZ PRINT_LOOP         ; If quotient is not zero, continue loop
+
+PRINT_LOOP2:
+    POP DX                 ; Pop remainder from stack
+    ADD DL, '0'            ; Convert remainder to ASCII
+    MOV AH, 2              ; DOS function to print character
+    INT 21H                ; Print the character
+    LOOP PRINT_LOOP2       ; Loop until all digits are printed
+
+    RET                    ; Return from subroutine
+PRINT_NUMBER ENDP
+
+
+
+CLEAR PROC
+    mov ah, 06h     ; Function to scroll the screen
+    mov al, 0       ; Clear the entire screen
+    mov bh, 07h     ; Color attribute (07h is light gray on black)
+    mov cx, 0       ; Upper left corner row and column (0, 0)
+    mov dx, 184FH   ; Lower right corner row and column (24, 79)
+    int 10h         ; Call BIOS video services interrupt
+    
+    
+     ; Set cursor position to the top left corner
+    mov ah, 02h     ; Function to set cursor position
+    mov bh, 0       ; Video page (0 for text mode)
+    mov dh, 0       ; Row (0-based)
+    mov dl, 0       ; Column (0-based)
+    int 10h         ; Call BIOS video services interrupt
+    RET
+CLEAR ENDP
+
+SIXTY:
+    mov ax,2
+    mov sec,ax
+    mov ax,min
+    add ax,1
+    mov min,ax 
+    JMP Seconds
+
+
+END START  
+
+
